@@ -25,6 +25,4 @@ Areeba Sadaqat (47633) (Member)
 - The workflow SSHes into EC2 and runs `docker pull` and `docker run -d -p 80:80 ...`.
 
 ## Changelog
-- 2025-10-10: Added CI/CD pipeline with GitHub Actions, Docker Hub push, and EC2 automatic deploy. 
-
-........
+- 2025-10-10: Added CI/CD pipeline with GitHub Actions, Docker Hub push, and EC2 automatic deploy.  now fine?
