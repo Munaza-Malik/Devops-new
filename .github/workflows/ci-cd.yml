@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline for Vite App
 
 on:
   push:
@@ -10,31 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
+      # Step 2: Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      # Step 3: Build and Push Docker image
+      - name: Build and Push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-react-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-react-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/vite-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/vite-app:latest
 
+      # Step 4: Deploy to AWS EC2 (simplified)
       - name: Deploy to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -43,13 +36,22 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
+          # Save EC2 key and connect
           echo "$EC2_KEY" > ec2-key.pem
           chmod 600 ec2-key.pem
 
-          ssh -o StrictHostKeyChecking=no -i ec2-key.pem $EC2_USER@$EC2_HOST "
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD &&
-            docker pull $DOCKER_USERNAME/my-react-app:latest &&
-            docker stop my-react-app || true &&
-            docker rm my-react-app || true &&
-            docker run -d -p 80:80 --name my-react-app $DOCKER_USERNAME/my-react-app:latest
-          "
+          ssh -o StrictHostKeyChecking=no -i ec2-key.pem $EC2_USER@$EC2_HOST << EOF
+            echo "🚀 Deploying app to EC2..."
+
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker pull $DOCKER_USERNAME/vite-app:latest
+
+            # Stop & remove any old container safely
+            docker stop vite-app 2>/dev/null || true
+            docker rm vite-app 2>/dev/null || true
+
+            # Run latest image
+            docker run -d -p 80:80 --name vite-app $DOCKER_USERNAME/vite-app:latest
+
+            echo "✅ Deployment completed successfully!"
+          EOF
