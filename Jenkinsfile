@@ -1,9 +1,10 @@
+
 pipeline {
     agent any
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        IMAGE_NAME = "munazamalik/devops-new" // your Docker Hub repo
+        IMAGE_NAME = "munazamalik/devops-new" 
     }
 
     stages {
