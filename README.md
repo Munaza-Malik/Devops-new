@@ -1,16 +1,28 @@
-# React + Vite
+## Group Members:
+Munaza Malik (44956) (Leader)
+Areeba Sadaqat (47633) (Member)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Technologies Used
+- **Vite** for frontend build
+- **Docker** for containerization
+- **GitHub Actions** for CI/CD automation
+- **AWS EC2** for deployment
 
-Currently, two official plugins are available:
+# My Vite App - CI/CD Pipeline
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Description of CI/CD pipeline
+- On push to `main` (or when a PR is merged) GitHub Actions builds a Docker image, pushes it to Docker Hub, then SSHes into the EC2 server to pull & run the new image.
 
-## React Compiler
+## How to run
+1. Install dependencies: `npm install`
+2. Run dev: `npm run dev`
+3. Build: `npm run build`
+4. Build docker: `docker build -t munazamalik/my-vite-app:latest .`
+5. Run: `docker run -d -p 80:80 munazamalik/my-vite-app:latest`
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## How deployment works
+- GitHub Actions builds and pushes `munazamalik/my-vite-app:latest`.
+- The workflow SSHes into EC2 and runs `docker pull` and `docker run -d -p 80:80 ...`.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Changelog
+- 2025-10-10: Added CI/CD pipeline with GitHub Actions, Docker Hub push, and EC2 automatic deploy.  now fine?
