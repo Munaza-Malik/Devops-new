@@ -1,26 +1,30 @@
-
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:20'   // official Node.js image
+            args '-u root:root' // run as root to allow docker commands
+        }
+    }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        IMAGE_NAME = "munazamalik/devops-new" 
+        IMAGE_NAME = "munazamalik/devops-new" // change to your Docker Hub repo
     }
 
     stages {
         stage('Pull Code from GitHub') {
             steps {
                 echo 'Pulling code from GitHub...'
-                git branch: 'main', url: 'https://github.com/Munaza-Malik/Devops-new.git'
+                git branch: 'feature-munaza', url: 'https://github.com/Munaza-Malik/Devops-new.git'
             }
         }
 
-        stage('Test') {
+        stage('Install Dependencies & Test') {
             steps {
-                echo 'Running tests...'
+                echo 'Installing npm dependencies and running tests...'
                 sh 'npm install'
-                sh 'npm test'              // runs dummy.test.js
-                junit 'results.xml'        // publish test results for analyzer
+                sh 'npm test'
+                junit 'results.xml'  // publish test results
             }
         }
 
@@ -46,7 +50,7 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline executed successfully!'
+            echo 'Pipeline executed successfully! Docker image pushed to Docker Hub.'
         }
         failure {
             echo 'Pipeline failed! Check logs for details.'
