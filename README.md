@@ -78,7 +78,7 @@ docker run -d -p 80:80 munazamalik/my-vite-app:latest
 
 ---
 
-# 🌐 How Deployment Works (EC2 CI/CD)
+# How Deployment Works (EC2 CI/CD)
 
 1. GitHub Actions builds and pushes this Docker image:
    `munazamalik/my-vite-app:latest`
@@ -96,7 +96,7 @@ docker run -d -p 80:80 munazamalik/my-vite-app:latest
 
 ---
 
-# ☸️ Minikube Deployment (Local Kubernetes)
+#  Minikube Deployment (Local Kubernetes)
 
 ## **1. Start Minikube**
 
@@ -104,59 +104,28 @@ docker run -d -p 80:80 munazamalik/my-vite-app:latest
 minikube start --driver=docker --cpus=2 --memory=2048 --disk-size=6g
 ```
 
-## **2. Use Minikube’s Docker Daemon**
+## **2. Apply Deployment & Service**
 
 ```bash
-& minikube -p minikube docker-env | Invoke-Expression
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
 ```
 
-## **3. Build Docker Image Inside Minikube**
-
-```bash
-docker build -t my-react-app:latest .
-```
-
-## **4. Apply Deployment & Service**
-
-```bash
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
-```
-
-## **5. Verify**
+## **3. Verify**
 
 ```bash
 kubectl get pods
 kubectl get svc
 ```
 
-## **6. Open App via Minikube**
+## **4. Open App via Minikube**
 
 ```bash
-minikube service my-react-service
+minikube service myapp-service
 ```
 
----
-
-# 📸 Documentation & Proof
-
-### **📌 Screenshot 1: `kubectl get pods`**
-
-> *(Insert screenshot here)*
-
----
-
-### **📌 Screenshot 2: Application Running Through Minikube URL**
-
-> *(Insert screenshot here)*
-
----
-
-# 📝 Changelog
-
+#  Changelog
 * **2025-10-10:** Added CI/CD pipeline with Docker Hub push + EC2 deployment
-* **2025-11-21:** Added Minikube deployment steps and documentation screenshots section
+* **2025-11-20:** Added Minikube deployment steps and documentation screenshots section
 
 ---
-
-If you want this in **PDF**, **DOCX**, or want me to **add architecture diagrams**, feel free to ask!
